@@ -7,11 +7,109 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/plugin/utc.js"></script>
     <link rel="stylesheet" href="./css/style.css">
     <title>Boolzap</title>
 </head>
 <body>
-    
+    <div id="app">
+        <!-- LEFT PART OF THE CHAT -->
+        <div class="l-part">
+            <div class="l-section">
+
+                <!-- PERSONAL AVATAR -->
+                <div class="personal-avatar">
+                    <img src="./img/avatar_io.jpg" alt="personalAvatar">
+                    <span class="personal-name">Alfonso</span>
+                </div>
+                <div class="icon-button">
+                    <i class="fas fa-circle-notch p-1"></i>
+                    <i class="fas fa-comment-alt p-1"></i>
+                    <i class="fas fa-ellipsis-v p-1"></i>
+                </div>
+            </div>
+
+            <!-- NOTIFICATIONS -->
+            <div class="notifications p-2">
+                <i class="fas fa-bell-slash m-2"></i>
+                <div class="notifications-text">
+                    <div>Ricevi notifiche di nuovi messaggi</div>
+                    <a href="#">Attiva notifiche desktop</a>
+                </div>
+            </div>
+
+            <!-- SEARCH BAR -->
+            <div class="search-bar p-2">
+                <i class="fas fa-search p-2"></i>
+                <input type="text" placeholder="Cerca o inizia una nuova chat" v-model="search" @keyup="filterContact()">
+            </div>
+
+            <!-- FRIENDS CHAT -->
+            <div class="friends">
+                <div class="friends-message p-2" v-for="(contact,index) in contacts" :key="index" :class="{'active': activeIndex === index}" @click="viewChat(index)" v-if="contact.visible">
+                    <img :src="contact.avatar" alt="avatar">
+                    <div class="friends-info">
+                        <div class="name">{{contact.name}}</div>
+                        <div class="textmessage">{{contact.messages.length > 0 ? contact.messages.slice(-1)[0].message : ''}}</div>
+                        <span class="date">{{contact.messages.length > 0 ? contact.messages.slice(-1)[0].date : ''}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /LEFT PART OF THE CHAT -->
+
+        <!-- RIGHT PART OF THE CHAT -->
+        <div class="r-part">
+            <div class="r-section">
+
+                <!-- PERSONAL ICON -->
+                <div class="personal-avatar">
+                    <img :src="contacts[activeIndex].avatar" alt="">
+                    <div class="personal-info">
+                        <div class="name">{{contacts[activeIndex].name}}</div>
+                        <div class="textmessage">Ultimo accesso {{contacts[activeIndex].messages.length > 0 ? contacts[activeIndex].messages.slice(-1)[0].date : ''}}</div>
+                    </div>
+                </div>
+
+                <!-- ICON BUTTON -->
+                <div class="icon-button">
+                    <i class="fas fa-search p-1"></i>
+                    <i class="fas fa-paperclip p-1"></i>
+                    <i class="fas fa-ellipsis-v p-1"></i>
+                </div>
+
+            </div>
+
+            <!-- MESSAGE SECTION -->
+            <div class="message-section">
+                <div class="message-text" v-for="(item,index) in contacts[activeIndex].messages" :key="index" :class="item.status === 'sent' ? 'sent' : 'received'">
+                    <span>{{item.message}}</span>
+                    <span class="hour">{{item.date}}</span>
+                    <div class="message-arrow arrow-dropdown">
+                        <i class="fa-solid fa-angle-down"></i>
+                        <div class="dropdown-content">
+                            <p>Info messaggio</p>
+                            <span @click="removeMessage(index)">Cancella messaggio</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MESSAGE BAR -->
+            <div class="message-bar">
+                <i class="far fa-smile" @click="addEmoticon()"></i>
+                <input type="text" placeholder="Scrivi un messaggio" size="75" v-model="message" @keyup.enter="sendMessage()">
+                <i class="fas fa-microphone"></i>
+            </div>
+        </div>
+        <!-- /RIGHT PART OF THE CHAT -->
+    </div>
+
     <script src="./js/script.js"></script>
 </body>
 </html>
