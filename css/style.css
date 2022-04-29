@@ -206,7 +206,7 @@ body {
 }
 
 .message-text{
-    min-width: 32%;
+    min-width: 30%;
     max-width: 40%;
     max-height: 7%;
     font-size: 15px;
@@ -218,12 +218,14 @@ body {
 }
 
 .message-text.sent{
+    margin-right: 100px;
     float: right;
     clear: both;
     background-color: #d5f9ba;
 }
 
 .message-text.received{
+    margin-left: 100px;
     float: left;
     clear: both;
     background-color: #ffffff;
